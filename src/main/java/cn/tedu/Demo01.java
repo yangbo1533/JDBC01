@@ -2,6 +2,7 @@ package cn.tedu;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.Statement;
 
 public class Demo01 {
     public static void main(String[] args) throws Exception {
@@ -13,10 +14,13 @@ public class Demo01 {
                         "root","root");
         System.out.println(conn);
         //3,创建执行SQL语句的对象
-
+        Statement s = conn.createStatement();
         //4,执行SQL语句
-
+        String sql = "create table jdbct1(id int,name varchar(20))";
+        s.execute(sql);
         //5,关闭资源
+        conn.close();
+        System.out.println("执行完毕");
 
     }
 }
