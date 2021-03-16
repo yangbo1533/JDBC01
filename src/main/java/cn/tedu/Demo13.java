@@ -18,6 +18,38 @@ public class Demo13 {
          *   如果没有则把球队添加到表中,同时还要获取出自增的id
          * 2,把球员名添加到球员表中,用到上面得到的id
          */
+        //获取连接
+        try (Connection conn = DBUtils.getConn();){
+            String sql = "select id from team where name=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,teamName);
+            ResultSet rs = ps.executeQuery();
+            int teamId = 0;
+            //判断是否查询到
+            if (rs.next()){//查询到了球队
+                teamId = rs.getInt(1);
+            }else{//没有该球队
+                //添加球队到team表
+                String tsql = "insert into team values(null,?)";
+                PreparedStatement tps = conn.prepareStatement(tsql,
+                        Statement.RETURN_GENERATED_KEYS);
+                tps.setString(1,teamName);
+                tps.executeUpdate();
+                System.out.println("球队添加完成!");
+                ResultSet trs = tps.getGeneratedKeys();
+                trs.next();//游标下移
+                teamId = trs.getInt(1);
+            }
+            //添加球员到球员表
+            String psql = "insert into player values(null,?,?)";
+            PreparedStatement pps = conn.prepareStatement(psql);
+            pps.setString(1,playerName);
+            pps.setInt(2,teamId);
+            pps.executeUpdate();
+            System.out.println("球员添加完成");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 //        //获取连接
 //        try (Connection conn = DBUtils.getConn();){
