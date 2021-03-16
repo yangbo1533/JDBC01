@@ -21,7 +21,6 @@ public class Demo04 {
                 double sal = rs.getDouble(2);
                 System.out.println(name+":"+sal);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
